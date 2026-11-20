@@ -1,0 +1,9 @@
+{
+  "name": "big-blue-heaven",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"test":"node --test", "build":"npm test"},
+  "engines": {"node": ">=22"},
+  "dependencies": {"@netlify/blobs": "11.1.9"}
+}
