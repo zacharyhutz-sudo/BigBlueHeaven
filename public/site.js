@@ -66,3 +66,60 @@ function initScrollReveals() {
 }
 
 initScrollReveals();
+
+function initGuestReviews() {
+  const section = document.getElementById('guest-reviews');
+  if (!section) return;
+
+  const track = section.querySelector('.review-track');
+  const cards = [...track.children];
+  const controls = section.querySelector('.review-controls');
+  const [previous, next] = controls.querySelectorAll('button');
+  const position = controls.querySelector('.review-position');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let scrollTimer;
+
+  function getPosition() {
+    const step = cards[1].offsetLeft - cards[0].offsetLeft;
+    const gap = step - cards[0].offsetWidth;
+    const visible = Math.round((track.clientWidth + gap) / step);
+    const last = cards.length - visible;
+    const first = Math.max(0, Math.min(Math.round(track.scrollLeft / step), last));
+    return { step, visible, first, last };
+  }
+
+  function updatePosition() {
+    const { first, last, visible } = getPosition();
+    const range = visible === 1 ? first + 1 : `${first + 1}–${first + visible}`;
+    const label = `${range} of ${cards.length}`;
+    if (position.textContent !== label) position.textContent = label;
+    previous.setAttribute('aria-disabled', String(first === 0));
+    next.setAttribute('aria-disabled', String(first === last));
+  }
+
+  function move(direction) {
+    const { first, last, step } = getPosition();
+    const target = Math.min(last, Math.max(0, first + direction));
+    if (first === target) return;
+    track.scrollTo({ left: target * step, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+  }
+
+  previous.addEventListener('click', () => move(-1));
+  next.addEventListener('click', () => move(1));
+  section.addEventListener('keydown', event => {
+    if (!track.contains(event.target) && !controls.contains(event.target)) return;
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    move(event.key === 'ArrowLeft' ? -1 : 1);
+  });
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(updatePosition, 120);
+  }, { passive: true });
+  new ResizeObserver(updatePosition).observe(track);
+  track.classList.add('review-track-ready');
+  updatePosition();
+  controls.hidden = false;
+}
+
+initGuestReviews();
