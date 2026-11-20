@@ -1,7 +1,7 @@
 import {getStore} from '@netlify/blobs';
 import {handleCalendar} from '../../server/calendar.mjs';
 
-export const config={path:['/api/calendar','/api/login','/api/logout','/api/session']};
+export const config={path:['/api/calendar','/api/login','/api/logout','/api/session','/api/estimate','/api/request','/api/owner','/api/pricing','/api/decision']};
 
 export default async function handler(request,context){
   try{

@@ -1,6 +1,6 @@
 # Big Blue Heaven
 
-A vacation-rental site for Big Blue Heaven on North Cape San Blas, Florida. The gallery uses photographs from the Cape & Coast property listing. Guests can browse availability at `/availability`. The owner can edit it at `/admin`. Booking, pricing, and payment take place on the linked Cape & Coast listing.
+A vacation-rental site for Big Blue Heaven on North Cape San Blas, Florida. The gallery uses photographs from the Cape & Coast property listing. Guests can request a stay at `/availability` and browse the Cape San Blas local guide at `/guide`. The owner manages requests, rates, and blocked dates at `/admin`.
 
 ## Deploy from GitHub to Netlify
 
@@ -11,14 +11,19 @@ A vacation-rental site for Big Blue Heaven on North Cape San Blas, Florida. The 
 
 The included tests run during the build. The function uses Netlify Blobs with the site’s automatic credentials. This project has no separate database account, schema setup, or SQL to paste.
 
-## Edit availability
+## Manage stays and pricing
 
-Choose a first date, a last date, and a status. Both dates are included. For a single date, use the same date twice. For a stay that checks out Saturday morning, mark occupied nights through Friday and set Saturday’s arrival or departure status separately. Click **Save dates**.
+1. Guests select check-in and check-out on the calendar or enter them in the form. The lodging estimate starts at **$1,200 per night**. Each night uses the rate in effect on that date. Guests submit contact information and get a reference number.
+2. Open **Owner login** and review **Stay requests**. Pending requests leave dates open. Approving a request reserves the nights from check-in through the night before checkout. The owner dashboard shows the guest's email so you can arrange confirmation and payment directly. Declined requests leave dates open. Cancelling an approved reservation releases its nights, subject to any separate owner blocks.
+3. In **Nightly rates**, set the standard rate and any seasonal date ranges. Both endpoints of a seasonal rate range are included. Review the configuration and select **Save rates**. A new estimate reflects the saved rates. Previously submitted requests keep the estimate the guest saw.
+4. Use **Block or reopen dates** to set dates for stays or maintenance outside this site's booking form. Both dates are included. To mark a single date, use the same date twice. Set **Departure only** on the arrival date of an externally booked stay when an earlier guest can check out that day. Mark the other occupied nights **Unavailable**.
 
-Changes are stored on the Netlify project and survive code redeploys. A guest opening the calendar sees the saved values. An already-open guest calendar refreshes every 30 seconds while visible and when it regains focus.
+This launch shows a lodging estimate. The owner handles applicable fees, taxes, payment, and guest follow-up directly. Submitted requests appear in the owner dashboard.
 
-The starting calendar was captured from Cape & Coast on November 20, 2026 and covers November 1, 2026 through April 30, 2028. Dates outside that initial range show as unconfirmed until the owner sets them. Subsequent bookings and cancellations on Cape & Coast require an owner calendar edit here. The owner's changes take precedence over the starting data. Calendar edits made in a separate preview site belong to that preview's storage.
+Calendar edits, pricing, and requests persist in Netlify Blobs across code redeploys. The guest calendar refreshes every 30 seconds while visible and when it regains focus. Existing date overrides in the Netlify project are retained.
+
+The starting calendar was captured from Cape & Coast on November 20, 2026 and covers November 1, 2026 through April 30, 2028. Dates outside that range show as unconfirmed until the owner opens them.
 
 ## Run the checks
 
-With Node.js 22.12 or newer, run `npm ci` followed by `npm test`. The integration test runs against a temporary local instance of Netlify’s Blobs server. It checks sign-in, date edits, persistence for guests, conflicts, restricted writes, and sign-out.
+With Node.js 22.12 or newer, run `npm ci` followed by `npm test`. The integration test runs against a temporary local instance of Netlify’s Blobs server. The tests cover owner authentication, date edits, seasonal estimates, request submission, retained quotes, and approving or cancelling reservations.
