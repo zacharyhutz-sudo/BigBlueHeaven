@@ -136,3 +136,57 @@ input[type=date] { min-width:0; }
 @media (max-width:450px) {
   .guide-places { grid-template-columns:1fr; }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    --reveal-distance: 22px;
+    --reveal-opacity: .28;
+    --reveal-duration: 680ms;
+    --reveal-delay: 0ms;
+    --reveal-curve: cubic-bezier(.22, .65, .25, 1);
+  }
+
+  [data-reveal="photo"] {
+    --reveal-distance: 34px;
+    --reveal-opacity: .18;
+    --reveal-duration: 840ms;
+  }
+
+  [data-reveal="quiet"] {
+    --reveal-distance: 14px;
+    --reveal-opacity: .64;
+    --reveal-duration: 530ms;
+  }
+
+  .reveal-pending { opacity: var(--reveal-opacity); translate: 0 var(--reveal-distance); }
+  [data-reveal="photo"].reveal-pending { scale: .985; }
+
+  .reveal-shown {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    transition:
+      opacity var(--reveal-duration) var(--reveal-curve) var(--reveal-delay),
+      translate var(--reveal-duration) var(--reveal-curve) var(--reveal-delay),
+      scale var(--reveal-duration) var(--reveal-curve) var(--reveal-delay);
+  }
+
+  /* Keyboard navigation brings a focused control into view immediately. */
+  [data-reveal]:focus-within {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    transition: none;
+  }
+}
+
+@media (min-width: 721px) and (prefers-reduced-motion: no-preference) {
+  .house-copy[data-reveal], .guide-places article:nth-child(even) { --reveal-delay: 85ms; }
+  .gallery-item:nth-child(2) { --reveal-delay: 75ms; }
+  .gallery-item:nth-child(3) { --reveal-delay: 150ms; }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
+  [data-reveal="text"] { --reveal-distance: 17px; }
+  [data-reveal="photo"] { --reveal-distance: 24px; }
+}
